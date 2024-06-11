@@ -1,0 +1,36 @@
+services:
+  db:
+    extends:
+      file: ../travel-alerts-messaging-api/compose.yml
+      service: db
+
+  localstack:
+    extends:
+      file: ../travel-alerts-messaging-api/compose.yml
+      service: localstack
+
+  api:
+    extends:
+      file: ../travel-alerts-messaging-api/compose.yml
+      service: api
+    depends_on:
+      - db
+      - localstack
+
+  internal:
+    extends:
+      file: ../travel-alerts-internal-tool/compose.yml
+      service: internal
+    depends_on:
+      - api
+  
+  subscriber:
+    extends:
+      file: ../travel-alerts-subscribe-app/compose.yml
+      service: subscriber
+    depends_on:
+      - api
+      
+
+volumes:
+  postgres_data:
